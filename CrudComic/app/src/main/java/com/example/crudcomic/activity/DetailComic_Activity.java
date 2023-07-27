@@ -21,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.crudcomic.Interface.Interface;
 import com.example.crudcomic.MainActivity;
 import com.example.crudcomic.R;
 import com.example.crudcomic.models.Comic;
@@ -28,6 +29,11 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DetailComic_Activity extends AppCompatActivity {
     ImageView imageView;
@@ -67,6 +73,7 @@ public class DetailComic_Activity extends AppCompatActivity {
         alertDialog.setPositiveButton("YES", (dialog, which) -> {
             Bundle bundle = getIntent().getExtras();
             final Comic comic = (Comic) bundle.get("object_comic");
+//            DeleteComic(comic.get_id());
             DeleteComic(comic.get_id());
             Toast.makeText(this, "xóa thành công", Toast.LENGTH_SHORT).show();
         });
@@ -95,6 +102,31 @@ public class DetailComic_Activity extends AppCompatActivity {
             }
         });
         requestQueue.add(jsonObjectRequest);
+    }
+    private void DeleteComic1(String id) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://10.0.2.2:3000/") // Định nghĩa base URL của API
+                .addConverterFactory(GsonConverterFactory.create()) // (sử dụng Gson Converter)
+                .build();
+// Tạo đối tượng API từ interface MyApiService
+        Interface apiService = retrofit.create(Interface.class);
+        Call<Void> calldelete = apiService.deleteLsp(id);
+        calldelete.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+                if (response.isSuccessful()) {
+
+                    Log.i("zzzz","xoathanhcong");
+                } else {
+                    // Xử lý khi yêu cầu thất bại
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // Xử lý khi yêu cầu thất bại
+            }
+        });
     }
 
 
@@ -136,7 +168,8 @@ public class DetailComic_Activity extends AppCompatActivity {
             Bundle bundle1 = getIntent().getExtras();
             final Comic comic1 = (Comic) bundle1.get("object_comic");
 
-            update_Comic(comic1.get_id(),title,description,author,year,coverImage);
+//            update_Comic(comic1.get_id(),title,description,author,year,coverImage);
+            updateLSP(comic1.get_id(),title,description,author,year,coverImage);
         });
         alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
             @Override
@@ -177,5 +210,29 @@ public class DetailComic_Activity extends AppCompatActivity {
             }
         });
         requestQueue.add(jsonObjectRequest);
+    }
+
+    public void updateLSP(String id ,String title,String description,String author,String year,String cover_image){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.31.2:3000/") // Định nghĩa base URL của API
+                .addConverterFactory(GsonConverterFactory.create()) // (sử dụng Gson Converter)
+                .build();
+// Tạo đối tượng API từ interface MyApiService
+        Comic comic =new Comic(title,description, author, year, cover_image);
+        Interface apiService = retrofit.create(Interface.class);
+        Call<Comic> callAdd = apiService.update(id,comic);
+        callAdd.enqueue(new Callback<Comic>() {
+            @Override
+            public void onResponse(Call<Comic> call, retrofit2.Response<Comic> response) {
+                Toast.makeText(DetailComic_Activity.this, "Sua tryen thanh cong ", Toast.LENGTH_SHORT).show();
+                Intent  intent = new Intent(DetailComic_Activity.this,MainActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(Call<Comic> call, Throwable t) {
+
+            }
+        });
     }
 }

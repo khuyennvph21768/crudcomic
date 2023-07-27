@@ -113,8 +113,9 @@ public class MainActivity extends AppCompatActivity {
              String author=edt_author.getText().toString();
              String year =edt_year.getText().toString();
               String coverImage=edt_coverImage.getText().toString();
-             add_Comic(title,description,author,year,coverImage);
-             getComic();
+//             add_Comic(title,description,author,year,coverImage);
+            addLSP(title,description,author,year,coverImage);
+            getComic();
         });
         alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
             @Override
@@ -211,6 +212,29 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void addLSP(String a ,String b ,String c,String d,String e){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://10.0.2.2:3000/") // Định nghĩa base URL của API
+                .addConverterFactory(GsonConverterFactory.create()) // (sử dụng Gson Converter)
+                .build();
+// Tạo đối tượng API từ interface MyApiService
+        Interface apiService = retrofit.create(Interface.class);
+
+        Comic comic =new Comic(a ,b,c,d,e);
+        Call<Comic> callAdd = apiService.addComic(comic);
+        callAdd.enqueue(new Callback<Comic>() {
+            @Override
+            public void onResponse(Call<Comic> call, Response<Comic> response) {
+                Toast.makeText(MainActivity.this, "thanh cong", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<Comic> call, Throwable t) {
+
+            }
+        });
     }
 }
 

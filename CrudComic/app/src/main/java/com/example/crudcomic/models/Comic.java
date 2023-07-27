@@ -25,8 +25,8 @@ public class Comic  implements Serializable {
         this.images = images;
     }
 
-    public Comic(String _id, String title, String description, String author, String year, String coverImage) {
-        this._id = _id;
+    public Comic( String title, String description, String author, String year, String coverImage) {
+
         this.title = title;
         this.description = description;
         this.author = author;
