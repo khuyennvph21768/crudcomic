@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL, jsonObject, new com.android.volley.Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Toast.makeText(MainActivity.this, "Them tryen thanh cong ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Them tryen thanh cong  ", Toast.LENGTH_SHORT).show();
                 getComic();
             }
         }, new com.android.volley.Response.ErrorListener() {
@@ -232,6 +232,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Comic> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "that bai", Toast.LENGTH_SHORT).show();
 
             }
         });
